@@ -1,5 +1,5 @@
 # sgx-wallet
-Password wallet based on Intel SGX.
+Password wallet based on Intel SGX for linux.
 
 ## Run
   - source the SDK:  `source /opt/intel/sgxsdk/environment`
