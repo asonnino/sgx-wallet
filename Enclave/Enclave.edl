@@ -1,13 +1,21 @@
+/*
+ *
+ *
+ */
+
 enclave {
+	// import enclave dependencies  
     from "Sealing/Sealing.edl" import *;
 
+
+    // define ECALLs
     trusted {
-        /* define ECALLs here. */
         public int generate_random_number(void);
     };
 
+
+    // define OCALLs
     untrusted {
-        /* define OCALLs here. */
-        void ocall_print([in, string]const char* str);
+        void ocall_debug_print([in, string]const char* str);
     };
 };
