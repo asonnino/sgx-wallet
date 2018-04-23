@@ -6,5 +6,5 @@ Password wallet based on Intel SGX for linux.
   - compile: `make clean && make`
   - run the app: `./app`
 
-## Hello world example:
-[Intel SGX "Hello World"](https://github.com/digawp/hello-enclave)
+## Credits:
+	- digawp [Intel SGX "Hello World"](https://github.com/digawp/hello-enclave)
