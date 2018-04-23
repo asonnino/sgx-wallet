@@ -53,7 +53,7 @@ int main(int argc, char const *argv[]) {
     ////////////////////////////////////////////////
     printf("\n-----------------------------------\n\n");
     printf("%s v%s\n", _APP_NAME_, _VERSION_);
-    printf("Password wallet based on Intel SGX.\n\n");
+    printf("Password wallet based on Intel SGX for linux.\n\n");
     printf("-----------------------------------\n\n");
 
 
