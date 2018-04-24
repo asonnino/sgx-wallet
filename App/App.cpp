@@ -6,6 +6,8 @@
 #include "Enclave_u.h"
 #include "sgx_urts.h"
 #include "sgx_utils/sgx_utils.h"
+#include "sgx_capable.h"
+#include "sgx_uae_service.h"
 // standard libs
 #include <stdio.h>
 
@@ -18,8 +20,11 @@ sgx_enclave_id_t global_eid = 0;
  * Defines
  *
  ***************************************************/
-#define _APP_NAME_ "SGX-WALLET"
-#define _VERSION_ "0.0.1"
+#define APP_NAME "SGX-WALLET"
+#define VERSION "0.0.1"
+#define ENCLAVE_FILE "enclave.signed.so"
+#define ENCLAVE_TOKEN "enclave.token"
+#define MAX_BUF_LEN 100
 
 
 /***************************************************
@@ -52,7 +57,7 @@ int main(int argc, char const *argv[]) {
     // print welcome message
     ////////////////////////////////////////////////
     printf("\n-----------------------------------\n\n");
-    printf("%s v%s\n", _APP_NAME_, _VERSION_);
+    printf("%s v%s\n", APP_NAME, VERSION);
     printf("Password wallet based on Intel SGX for linux.\n\n");
     printf("-----------------------------------\n\n");
 
@@ -60,11 +65,11 @@ int main(int argc, char const *argv[]) {
     ////////////////////////////////////////////////
     // initialise enclave
     ////////////////////////////////////////////////
-    if (initialize_enclave(&global_eid, "enclave.token", "enclave.signed.so") < 0) {
-        error_print("Fail to initialize enclave.");
-        return 1;
+    if (initialize_enclave(&global_eid, ENCLAVE_TOKEN, ENCLAVE_FILE) < 0) {
+        error_print("Fail to initialize enclave."); return 1;
     }
     info_print("Enclave successfully initilised.");
+
 
 
     ////////////////////////////////////////////////
@@ -78,8 +83,7 @@ int main(int argc, char const *argv[]) {
     // test simple ECALL
     status = generate_random_number(global_eid, &ptr);
     if (status != SGX_SUCCESS) {
-        error_print("Fail test ECALL.");
-        return 1; 
+        error_print("Fail test ECALL."); return 1; 
     }
     sprintf(string_buffer, "Random number generated: %d", ptr);
     info_print(string_buffer);
@@ -96,8 +100,7 @@ int main(int argc, char const *argv[]) {
     );
 
     if (status != SGX_SUCCESS || ecall_status != SGX_SUCCESS) {
-        error_print("Sealing failed.");
-        return 1;
+        error_print("Sealing failed."); return 1;
     }
 
     int unsealed;
@@ -108,9 +111,10 @@ int main(int argc, char const *argv[]) {
     );
 
     if (status != SGX_SUCCESS || ecall_status != SGX_SUCCESS) {
-        error_print("Unsealing failed.");
-        return 1;
+        error_print("Unsealing failed."); return 1;
     }
+
+    free(sealed_data);
 
     sprintf(string_buffer, "Seal round trip success! Receive back: %d", unsealed);
     info_print(string_buffer);
@@ -121,6 +125,21 @@ int main(int argc, char const *argv[]) {
     ////////////////////////////////////////////////
     //read user input and opt for adding new password 
     // or display (cat) password content
+    const char title[MAX_BUF_LEN] = "title item";
+    const char username[MAX_BUF_LEN] = "asonnino";
+    const char password[MAX_BUF_LEN] = "test1234";
+    status = add_item(global_eid, &ptr, title, username, password);
+    if (status != SGX_SUCCESS) {
+        error_print("Fail to add item."); return 1; 
+    }
+    switch (ptr) {
+        case 0: info_print("Item successfully added to the wallet."); break;
+        case 1: error_print("Item title too long."); return 1;
+        case 2: error_print("Username too long."); return 1;
+        case 3: error_print("Password too long."); return 1;
+        default: error_print("Fail to add item."); return 1;
+    }
+    
 
 
     ////////////////////////////////////////////////

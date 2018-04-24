@@ -10,7 +10,14 @@ enclave {
 
     // define ECALLs
     trusted {
+        include "Wallet.h"
+
         public int generate_random_number(void);
+        public int add_item(
+            [in, string]const char* title, 
+            [in, string]const char* username, 
+            [in, string]const char* password
+        );
     };
 
 
