@@ -9,7 +9,13 @@
 #include "sgx_capable.h"
 #include "sgx_uae_service.h"
 // standard libs
+#include <iostream>
 #include <stdio.h>
+#include <fstream>
+// custom libs
+#include "Wallet.h"
+
+using namespace std;
 
 /* global EID shared by multiple threads */
 sgx_enclave_id_t global_eid = 0;
@@ -24,6 +30,7 @@ sgx_enclave_id_t global_eid = 0;
 #define VERSION "0.0.1"
 #define ENCLAVE_FILE "enclave.signed.so"
 #define ENCLAVE_TOKEN "enclave.token"
+#define WALLET_FILE "wallet.bin"
 #define MAX_BUF_LEN 100
 
 
@@ -35,6 +42,13 @@ sgx_enclave_id_t global_eid = 0;
 void ocall_debug_print(const char* str) {
     printf("[DEBUG] %s\n", str);
 }
+void ocall_save(const uint8_t* sealed_data, size_t sealed_size) {
+    ofstream file;
+    file.open(WALLET_FILE, ios::out | ios::binary);
+    file.write((const char*) sealed_data, sealed_size);
+    file.close();
+}
+
 
 
 /***************************************************
@@ -47,6 +61,20 @@ void warning_print(const char* str) {printf("[WARNING] %s\n", str);}
 void error_print(const char* str) {printf("[ERROR] %s\n", str);}
 
 
+
+void save(wallet_t* data, size_t len) {
+    ofstream file;
+    file.open(WALLET_FILE, ios::out | ios::binary);
+    file.write((char*) data, len);
+    file.close();
+}
+void load(wallet_t* data, size_t len) {
+    ifstream file;
+    file.open(WALLET_FILE, ios::out | ios::binary);
+    file.read((char*) data, len);
+    file.close();
+}
+
 /***************************************************
  *
  * main
@@ -56,10 +84,10 @@ int main(int argc, char const *argv[]) {
     ////////////////////////////////////////////////
     // print welcome message
     ////////////////////////////////////////////////
-    printf("\n-----------------------------------\n\n");
+    printf("\n-----------------------------------------\n\n");
     printf("%s v%s\n", APP_NAME, VERSION);
-    printf("Password wallet based on Intel SGX for linux.\n\n");
-    printf("-----------------------------------\n\n");
+    printf("Simple password wallet based on Intel SGX.\n\n");
+    printf("------------------------------------------\n\n");
 
 
     ////////////////////////////////////////////////
@@ -126,8 +154,10 @@ int main(int argc, char const *argv[]) {
     //read user input and opt for adding new password 
     // or display (cat) password content
     const char title[MAX_BUF_LEN] = "title item";
-    const char username[MAX_BUF_LEN] = "asonnino";
+    const char username[MAX_BUF_LEN] = "asonnino2";
     const char password[MAX_BUF_LEN] = "test1234";
+    const char master_password[MAX_BUF_LEN] = "HELLO!";
+    /*
     status = add_item(global_eid, &ptr, title, username, password);
     if (status != SGX_SUCCESS) {
         error_print("Fail to add item."); return 1; 
@@ -139,7 +169,53 @@ int main(int argc, char const *argv[]) {
         case 3: error_print("Password too long."); return 1;
         default: error_print("Fail to add item."); return 1;
     }
+    */
+    // check title size
+    const int title_len = strlen(title)+1;
+    if (title_len > MAX_BUF_LEN) {
+        error_print("Item title too long."); return 1;
+    }
+
+    // check username size
+    const int username_len = strlen(username)+1;
+    if (username_len > MAX_BUF_LEN) {
+        error_print("Username too long."); return 1;
+    }
+
+    // check password size
+    const int password_len = strlen(password)+1;
+    if (password_len > MAX_BUF_LEN) {
+        error_print("Password too long."); return 1;
+    }
+
+    // first create a data struct for the new item
+    item_t new_item;
+    strncpy(new_item.title, title, title_len); 
+    strncpy(new_item.username, username, username_len); 
+    strncpy(new_item.password, password, password_len); 
+
+    wallet_t new_wallet;
+    new_wallet.size = 0;
+    strncpy(new_wallet.master_password, master_password, strlen(master_password)+1); 
+
+
+    // add item
+    new_wallet.items[0] = new_item;
+    ++new_wallet.size;
+
+    // seal data here
+
+    // save
+    save(&new_wallet, sizeof(new_wallet));
+
+
+    wallet_t read_wallet;
+    load(&read_wallet, sizeof(read_wallet));
+
+    // unseal data here
     
+    info_print(read_wallet.items[read_wallet.size-1].username);
+    info_print(read_wallet.master_password);
 
 
     ////////////////////////////////////////////////
