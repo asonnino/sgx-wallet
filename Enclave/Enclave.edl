@@ -1,22 +1,55 @@
-/*
- *
- *
- */
-
+// ============================================================================
+// enclave.edl
+// 
+//
+// ============================================================================
 enclave {
+
 	// import enclave dependencies  
     from "Sealing/Sealing.edl" import *;
+
+    // includes
+    include "Wallet.h"
 
 
     // define ECALLs
     trusted {
-        include "Wallet.h"
-
         public int generate_random_number(void);
+
+        public int create_wallet(
+            [in, string]const char* master_password, 
+            [out, size=sealed_size] sgx_sealed_data_t* sealed_data, 
+            size_t sealed_size
+        );
+
+        public int show_wallet(
+            [in, string]const char* master_password, 
+            [in, size=sealed_size]const sgx_sealed_data_t* sealed_data, 
+            size_t sealed_size,
+            [out, size=wallet_size] wallet_t* wallet,
+            size_t wallet_size
+        );
+
+        public int change_wallet_password(
+            [in, string]const char* old_password, 
+            [in, string]const char* new_password, 
+            [in, out, size=sealed_size] sgx_sealed_data_t* sealed_data, 
+            size_t sealed_size
+        );
+
         public int add_item(
-            [in, string]const char* title, 
-            [in, string]const char* username, 
-            [in, string]const char* password
+            [in, string]const char* master_password, 
+            [in, out, size=sealed_size]sgx_sealed_data_t* sealed_data, 
+            size_t sealed_size,
+            [in, size=item_size]const item_t* item,
+            size_t item_size
+        );
+
+        public int remove_item(
+            [in, string]const char* master_password, 
+            [in, out, size=sealed_size]sgx_sealed_data_t* sealed_data, 
+            size_t sealed_size,
+            int index
         );
     };
 

@@ -1,29 +1,13 @@
-/*
- *
- *
- */
+// ============================================================================
+// enclave.cpp
+// 
+//
+// ============================================================================
 #include "Enclave_t.h"
 #include "string.h"
 
 
-
-
-
-
-/***************************************************
- *
- * Defines
- *
- ***************************************************/
-#define ERR_TITLE_TOO_LONG 1
-#define ERR_USERNAME_TOO_LONG 2
-#define ERR_PASSWORD_TOO_LONG 3
-#define ERR_SEAL_FAILED 4
-
-
-
-
-/*
+/**
  *
  */
 int generate_random_number() {
@@ -32,58 +16,101 @@ int generate_random_number() {
 }
 
 
-/*
+/**
+ *
  *
  */
-int add_item(const char* title, const char* username, const char* password) {
+int create_wallet(const char* master_password, sgx_sealed_data_t* sealed_data, size_t sealed_size) {
 
+	//
+	// TODO: 
+	// 	1. create wallet
+	//	2. seal wallet
+	//	3. return sealed wallet
+	//
+	//
 
-
-
-	// receive sealed data -- unseal -- check if master_pass -- return unsealed
-
-
-
-
-	/*
-	// check title size
-	const int title_len = strlen(title)+1;
-	if (title_len > MAX_BUF_LEN) {return ERR_TITLE_TOO_LONG;}
-
-	// check username size
-	const int username_len = strlen(username)+1;
-	if (username_len > MAX_BUF_LEN) {return ERR_USERNAME_TOO_LONG;}
-
-	// check password size
-	const int password_len = strlen(password)+1;
-	if (password_len > MAX_BUF_LEN) {return ERR_PASSWORD_TOO_LONG;}
-
-	// first create a data struct for the new item
-	Item new_item;
-	strncpy(new_item.title, title, title_len); 
-	strncpy(new_item.username, username, username_len); 
-	strncpy(new_item.password, password, password_len); 
-
-	// seal data
-	size_t sealed_size = sizeof(sgx_sealed_data_t) + sizeof(new_item);
-    uint8_t* sealed_data = (uint8_t*)malloc(sealed_size);
-
-    sgx_status_t status = seal( 
-        (uint8_t*) &new_item, sizeof(new_item), 
-        (sgx_sealed_data_t*) sealed_data, sealed_size
-    );
-    if (status != SGX_SUCCESS) {return ERR_SEAL_FAILED;}
-
-    ocall_save(sealed_data, sealed_size);
-
-
-
-	ocall_debug_print("Username and password copied into the enclave.");
-	//char str[20];
-	//snprintf(str, 20, "%d", sizeof(new_item));
-	//ocall_debug_print(str);
 	return 0;
-	*/
 }
 
+
+/**
+ *
+ *
+ */
+int show_wallet(const char* master_password, const sgx_sealed_data_t* sealed_data, const size_t sealed_size,
+	wallet_t* wallet, size_t wallet_size) {
+
+	//
+	// TODO: 
+	// 	1. unseal wallet
+	//	2. verify master-password
+	//	3. return wallet
+	//
+	//
+
+	return 0;
+}
+
+
+/**
+ *
+ *
+ */
+int change_wallet_password(const char* old_password, const char* new_password, sgx_sealed_data_t* sealed_data, 
+	size_t sealed_size) {
+
+	//
+	// TODO: 
+	// 	1. unseal wallet
+	//	2. verify old password
+	//	3. update password
+	//	4. seal wallet
+	//  5. return sealed wallet
+	//
+	//
+
+	return 0;
+}
+
+
+/**
+ *
+ *
+ */
+int add_item(const char* master_password, sgx_sealed_data_t* sealed_data, size_t sealed_size,
+	const item_t* item, const size_t item_size) {
+
+	//
+	// TODO: 
+	// 	1. unseal wallet
+	//	2. verify master-password
+	//	3. add item to the wallet
+	//	4. seal wallet
+	//	5. return new sealed wallet
+	//
+	//
+
+	return 0;
+}
+
+
+/**
+ *
+ *
+ */
+int remove_item(const char* master_password, sgx_sealed_data_t* sealed_data, size_t sealed_size, const int index) {
+
+	//
+	// TODO: 
+	// 	1. unseal wallet
+	//	2. verify master-password
+	//	3. remove item to the wallet
+	//	4. seal wallet
+	//	5. return new sealed wallet
+	//
+	//
+
+	return 0;
+}
 

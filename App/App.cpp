@@ -152,24 +152,11 @@ int main(int argc, char const *argv[]) {
     // read input arguments 
     ////////////////////////////////////////////////
     //read user input and opt for adding new password 
-    // or display (cat) password content
+    const char master_password[MAX_BUF_LEN] = "HELLO!";
     const char title[MAX_BUF_LEN] = "title item";
     const char username[MAX_BUF_LEN] = "asonnino2";
     const char password[MAX_BUF_LEN] = "test1234";
-    const char master_password[MAX_BUF_LEN] = "HELLO!";
-    /*
-    status = add_item(global_eid, &ptr, title, username, password);
-    if (status != SGX_SUCCESS) {
-        error_print("Fail to add item."); return 1; 
-    }
-    switch (ptr) {
-        case 0: info_print("Item successfully added to the wallet."); break;
-        case 1: error_print("Item title too long."); return 1;
-        case 2: error_print("Username too long."); return 1;
-        case 3: error_print("Password too long."); return 1;
-        default: error_print("Fail to add item."); return 1;
-    }
-    */
+    
     // check title size
     const int title_len = strlen(title)+1;
     if (title_len > MAX_BUF_LEN) {
