@@ -18,6 +18,7 @@
 #define ERR_WRONG_MASTER_PASSWORD 5
 #define ERR_WALLET_FULL 6
 #define ERR_ITEM_DOES_NOT_EXIST 7
+#define ERR_ITEM_TOO_LONG 8
 
 
 #endif // ENCLAVE_H_

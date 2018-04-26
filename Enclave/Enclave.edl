@@ -9,7 +9,7 @@ enclave {
     from "Sealing/Sealing.edl" import *;
 
     // includes
-    include "Wallet.h"
+    include "wallet.h"
 
 
     // define ECALLs
@@ -61,13 +61,13 @@ enclave {
         int ocall_is_wallet(void);
 
 
-        // tmp (to remove)
-        int ocall_save(
+        // tmp 
+        int ocall_save_tmp(
             [in, size=len]const wallet_t* data, 
             size_t len
         );
 
-        int ocall_load(
+        int ocall_load_tmp(
             [out, size=len]wallet_t* data, 
             size_t len
         );

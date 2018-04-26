@@ -13,7 +13,8 @@
 #include <stdio.h>
 #include <fstream>
 // custom libs
-#include "Wallet.h"
+#include "debug.h"
+#include "wallet.h"
 #include "enclave.h"
 
 using namespace std;
@@ -60,15 +61,16 @@ int ocall_is_wallet(void) {
     file.close();
     return 1;
 }
+
 // tmp
-int ocall_save(const wallet_t* data, size_t len) {
+int ocall_save_tmp(const wallet_t* data, size_t len) {
     ofstream file(WALLET_FILE, ios::out | ios::binary);
     if (file.fail()) {return 1;}
     file.write((const char*) data, len);
     file.close();
     return 0;
 }
-int ocall_load(wallet_t* data, size_t len) {
+int ocall_load_tmp(wallet_t* data, size_t len) {
     ifstream file(WALLET_FILE, ios::in | ios::binary);
     if (file.fail()) {return 1;}
     file.read((char*) data, len);
@@ -133,45 +135,50 @@ void print_wallet(const wallet_t* wallet) {
 int is_error(int ret) {
     char err_message[100];
 
+    // check error case
     switch(ret) {
         case RET_SUCCESS:
             return 0;
 
         case ERR_PASSWORD_OUT_OF_RANGE:
             sprintf(err_message, "Password should be at least 8 characters long and at most %d.", MAX_ITEM_SIZE);
-            error_print(err_message); 
-            return 1;
+            break;
 
         case ERR_WALLET_ALREADY_EXISTS:
             sprintf(err_message, "Wallet already exists: delete file '%s' first.", WALLET_FILE);
-            error_print(err_message); 
-            return 1;
+            break;
 
         case ERR_CANNOT_SAVE_WALLET:
-            error_print("Coud not save wallet."); 
-            return 1;
+            strcpy(err_message, "Coud not save wallet.");
+            break;
 
         case ERR_CANNOT_LOAD_WALLET:
-            error_print("Coud not load wallet.");
-            return 1;
+            strcpy(err_message, "Coud not load wallet.");
+            break;
 
         case ERR_WRONG_MASTER_PASSWORD:
-            error_print("Wrong master password."); 
-            return 1;
+            strcpy(err_message, "Wrong master password."); 
+            break;
 
         case ERR_WALLET_FULL:
             sprintf(err_message, "Wallet full (maximum number of item: %d).", MAX_ITEMS);
-            error_print(err_message);
-            return 1;
+            break;
 
         case ERR_ITEM_DOES_NOT_EXIST: 
-            error_print("Item does not exist."); 
-            return 1;
+            strcpy(err_message, "Item does not exist."); 
+            break;
+
+        case ERR_ITEM_TOO_LONG:
+            sprintf(err_message, "Item too longth (maximum size: %d).", MAX_ITEM_SIZE); 
+            break;
 
         default:
             error_print("Unknown error."); 
-            return 1;
     }
+
+    // print error message
+    error_print(err_message);
+    return 1;
 }
 
 
@@ -197,6 +204,9 @@ void load(wallet_t* data, size_t len) {
  ***************************************************/
 int main(int argc, char const *argv[]) {
     sgx_enclave_id_t global_eid = 0;
+    int ret;
+    sgx_status_t ecall_status;
+
 
     ////////////////////////////////////////////////
     // initialise enclave
@@ -211,6 +221,7 @@ int main(int argc, char const *argv[]) {
     ////////////////////////////////////////////////
     // test enclave
     ////////////////////////////////////////////////
+    /*
     int ptr; // return value
     int ret; // return value
     sgx_status_t status; // sgx return status
@@ -218,7 +229,7 @@ int main(int argc, char const *argv[]) {
     char string_buffer[50]; // string buffer for format printing
 
     // test simple ECALL
-    /*
+
     status = generate_random_number(global_eid, &ptr);
     if (status != SGX_SUCCESS) {
         error_print("Fail test ECALL."); return 1; 
@@ -263,32 +274,13 @@ int main(int argc, char const *argv[]) {
     // read input arguments 
     ////////////////////////////////////////////////
     //read user input and opt for adding new password 
-    const char master_password[MAX_BUF_LEN] = "HELLO!HELLO!HELLO!";
-    const char new_master_password[MAX_BUF_LEN] = "NEW PASSword here";
-    const char title[MAX_BUF_LEN] = "title item";
-    const char username[MAX_BUF_LEN] = "asonnino2";
-    const char password[MAX_BUF_LEN] = "test1234";
+    const char master_password[MAX_ITEM_SIZE] = "This is the master-password";
+    const char new_master_password[MAX_ITEM_SIZE] = "This is the new master-password";
+    const char title[MAX_ITEM_SIZE] = "New Item Title";
+    const char username[MAX_ITEM_SIZE] = "asonnino";
+    const char password[MAX_ITEM_SIZE] = "test1234";
     
-    // check title size
-    warning_print("Input checks should happen in the encalve.");
-    const int title_len = strlen(title)+1;
-    if (title_len > MAX_BUF_LEN) {
-        error_print("Item title too long."); return 1;
-    }
-
-    // check username size
-    const int username_len = strlen(username)+1;
-    if (username_len > MAX_BUF_LEN) {
-        error_print("Username too long."); return 1;
-    }
-
-    // check password size
-    const int password_len = strlen(password)+1;
-    if (password_len > MAX_BUF_LEN) {
-        error_print("Password too long."); return 1;
-    }
-
-
+    
     ////////////////////////////////////////////////
     // enclave tests
     ////////////////////////////////////////////////
@@ -303,9 +295,9 @@ int main(int argc, char const *argv[]) {
 
     // add item
     item_t new_item;
-    strncpy(new_item.title, title, title_len); 
-    strncpy(new_item.username, username, username_len); 
-    strncpy(new_item.password, password, password_len);
+    strcpy(new_item.title, title); 
+    strcpy(new_item.username, username); 
+    strcpy(new_item.password, password);
     ecall_status = ecall_add_item(global_eid, &ret, master_password, &new_item, sizeof(item_t));
     if (ecall_status != SGX_SUCCESS || is_error(ret)) {
         error_print("Fail to add new item to wallet.");
@@ -360,7 +352,7 @@ int main(int argc, char const *argv[]) {
     ////////////////////////////////////////////////
     // TODO
     //info_print("Enclave successfully destroyed.");
-    warning_print("Not implemented: Enclave should be detroyed here.");
+    warning_print("[TODO] Enclave should be detroyed here.");
 
 
     ////////////////////////////////////////////////
