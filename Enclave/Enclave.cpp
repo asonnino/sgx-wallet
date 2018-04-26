@@ -192,6 +192,7 @@ int ecall_change_master_password(const char* old_password, const char* new_passw
 
 	// 3. unseal wallet
 	// TODO
+	// seal-unseal as .h (instead of EDL -- no need to interface with app)
 
 	// 4. verify master-password
 	if (strcmp(wallet->master_password, old_password) != 0) {
