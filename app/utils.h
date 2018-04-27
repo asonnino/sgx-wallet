@@ -17,36 +17,38 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WALLET_H_
-#define WALLET_H_
+#ifndef UTIL_H_
+#define UTIL_H_
+
+#include "wallet.h"
 
 
-/***************************************************
- * Defines
- ***************************************************/
-#define MAX_ITEMS 100
-#define MAX_ITEM_SIZE 100
+/**
+ *
+ */
+void info_print(const char* str);
+
+/**
+ *
+ */
+void warning_print(const char* str);
+
+/**
+ *
+ */
+void error_print(const char* str);
+
+/**
+ *
+ */
+void print_wallet(const wallet_t* wallet);
+
+/**
+ *
+ */
+int is_error(int ret);
 
 
-/***************************************************
- * Struct
- ***************************************************/
-// item
-struct Item {
-	char  title[MAX_ITEM_SIZE];
-	char  username[MAX_ITEM_SIZE];
-	char  password[MAX_ITEM_SIZE];
-};
-typedef struct Item item_t;
-
-// wallet
-struct Wallet {
-	item_t items[MAX_ITEMS];
-	size_t size;
-	char master_password[MAX_ITEM_SIZE];
-};
-typedef struct Wallet wallet_t;
+#endif // UTIL_H_
 
 
-
-#endif // WALLET_H_

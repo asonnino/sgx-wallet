@@ -17,36 +17,17 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WALLET_H_
-#define WALLET_H_
+#ifndef APP_H_
+#define APP_H_
 
 
 /***************************************************
- * Defines
+ * config.
  ***************************************************/
-#define MAX_ITEMS 100
-#define MAX_ITEM_SIZE 100
+#define APP_NAME "SGX-WALLET"
+#define VERSION "0.0.1"
+#define ENCLAVE_FILE "enclave.signed.so"
+#define WALLET_FILE "wallet.seal"
 
 
-/***************************************************
- * Struct
- ***************************************************/
-// item
-struct Item {
-	char  title[MAX_ITEM_SIZE];
-	char  username[MAX_ITEM_SIZE];
-	char  password[MAX_ITEM_SIZE];
-};
-typedef struct Item item_t;
-
-// wallet
-struct Wallet {
-	item_t items[MAX_ITEMS];
-	size_t size;
-	char master_password[MAX_ITEM_SIZE];
-};
-typedef struct Wallet wallet_t;
-
-
-
-#endif // WALLET_H_
+#endif // APP_H_
