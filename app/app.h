@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #ifndef APP_H_
 #define APP_H_
 

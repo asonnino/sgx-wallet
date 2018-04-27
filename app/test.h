@@ -16,43 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UTIL_H_
-#define UTIL_H_
+#ifndef TEST_H_
+#define TEST_H_
 
-#include "wallet.h"
+#include "sgx_urts.h"
 
 
 /**
- *
+ * 
  */
-void info_print(const char* str);
-
-/**
- *
- */
-void warning_print(const char* str);
-
-/**
- *
- */
-void error_print(const char* str);
-
-/**
- *
- */
-void print_wallet(const wallet_t* wallet);
-
-/**
- *
- */
-int is_error(int ret);
-
-/**
- *
- */
-void display_help();
+int test(sgx_enclave_id_t eid);
 
 
-#endif // UTIL_H_
-
+#endif // TEST_H_
 

@@ -16,20 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-// sgx includes
 #include "enclave_u.h"
 #include "sgx_urts.h"
-// standard libs
+
 #include <cstring>
 #include <fstream>
-// custom libs
+#include <getopt.h>
+
 #include "app.h"
 #include "utils.h"
 #include "ocalls.h"
 #include "debug.h"
 #include "wallet.h"
 #include "enclave.h"
+#include "test.h"
 
 using namespace std;
 
@@ -37,7 +37,6 @@ using namespace std;
 /***************************************************
  * OCALLs implementation
  ***************************************************/
-
 /*
  *
  */
@@ -101,7 +100,10 @@ int ocall_load_tmp(wallet_t* data, size_t len) {
 /***************************************************
  * main
  ***************************************************/
-int main(int argc, char const *argv[]) {
+/*
+ *
+ */
+int main(int argc, char** argv) {
     // declare enclave & return variables
     sgx_enclave_id_t eid = 0;
     sgx_launch_token_t token = {0};
@@ -120,135 +122,89 @@ int main(int argc, char const *argv[]) {
     info_print("Enclave successfully initilised.");
 
 
-
-
-    ////////////////////////////////////////////////
-    // test enclave
-    ////////////////////////////////////////////////
-    /*
-    int ptr; // return value
-    int ret; // return value
-    sgx_status_t status; // sgx return status
-    sgx_status_t ecall_status; // ecall return status
-    char string_buffer[50]; // string buffer for format printing
-
-    // test simple ECALL
-
-    status = generate_random_number(eid, &ptr);
-    if (status != SGX_SUCCESS) {
-        error_print("Fail test ECALL."); return 1; 
-    }
-    sprintf(string_buffer, "Random number generated: %d", ptr);
-    info_print(string_buffer);
-
-
-    // seal / unseal the random number
-    size_t sealed_size = sizeof(sgx_sealed_data_t) + sizeof(ptr);
-    uint8_t* sealed_data = (uint8_t*)malloc(sealed_size);
-
-    status = seal(
-        eid, &ecall_status, 
-        (uint8_t*) &ptr, sizeof(ptr), 
-        (sgx_sealed_data_t*) sealed_data, sealed_size
-    );
-
-    if (status != SGX_SUCCESS || ecall_status != SGX_SUCCESS) {
-        error_print("Sealing failed."); return 1;
-    }
-
-    int unsealed;
-    status = unseal(
-        eid, &ecall_status,
-        (sgx_sealed_data_t*) sealed_data, sealed_size,
-        (uint8_t*) &unsealed, sizeof(unsealed)
-    );
-
-    if (status != SGX_SUCCESS || ecall_status != SGX_SUCCESS) {
-        error_print("Unsealing failed."); return 1;
-    }
-
-    free(sealed_data);
-
-    sprintf(string_buffer, "Seal round trip success! Receive back: %d", unsealed);
-    info_print(string_buffer);
-    */
-
-
     ////////////////////////////////////////////////
     // read input arguments 
     ////////////////////////////////////////////////
-    //read user input and opt for adding new password 
-    const char master_password[MAX_ITEM_SIZE] = "This is the master-password";
-    const char new_master_password[MAX_ITEM_SIZE] = "This is the new master-password";
-    const char title[MAX_ITEM_SIZE] = "New Item Title";
-    const char username[MAX_ITEM_SIZE] = "asonnino";
-    const char password[MAX_ITEM_SIZE] = "test1234";
+    const char* options = "hp:nc:sa:t";
+    char err_message[100];
+    int opt;
+    int h_flag=0, n_flag=0, s_flag=0, t_flag=0;
+    char *p_value, *c_value, *a_value;
     
-    
-    ////////////////////////////////////////////////
-    // enclave tests
-    ////////////////////////////////////////////////
-    // create wallet
-    ecall_status = ecall_create_wallet(eid, &ret, master_password);
-    if (ecall_status != SGX_SUCCESS || is_error(ret)) {
-        error_print("Fail to create new wallet.");
-        return -1;
+    // read user input
+    while ((opt = getopt (argc, argv, options)) != -1) {
+        switch (opt) {
+            case 'h': // help
+                h_flag = 1;
+                break;
+
+            case 'p': // master-password
+                p_value = optarg;
+                break;
+
+            case 'n': // create new wallet
+                n_flag = 1;
+                break;
+
+            case 'c': // change master-password
+                c_value = optarg;
+                break;
+
+            case 's': // show wallet
+                s_flag = 1;
+                break;
+
+            case 'a': // add item
+                a_value = optarg;
+                break;
+
+            case 't': // run tests
+                t_flag = 1;
+                break;
+
+            case '?':
+                if (optopt == 'p' || optopt == 'c' || optopt == 'a') {
+                    sprintf(err_message, "Option -%c requires an argument.\n", optopt);
+                }
+                else if (isprint(optopt)) {
+                    sprintf(err_message, "Unknown option `-%c'.\n", optopt);
+                }
+                else {
+                    sprintf(err_message, "Unknown option character `\\x%x'.\n",optopt);
+                }
+                error_print(err_message);
+                break;
+
+            default:
+                error_print("Unknown option.");
+        }
     }
-    info_print("Wallet successfully created.");
 
-
-    // add item
-    item_t new_item;
-    strcpy(new_item.title, title); 
-    strcpy(new_item.username, username); 
-    strcpy(new_item.password, password);
-    ecall_status = ecall_add_item(eid, &ret, master_password, &new_item, sizeof(item_t));
-    if (ecall_status != SGX_SUCCESS || is_error(ret)) {
-        error_print("Fail to add new item to wallet.");
-        return -1;
+    // perform actions
+    if (h_flag) {
+        display_help();
     }
-    info_print("Item successfully added to the wallet.");
-
-
-    // test change password
-    ecall_status = ecall_change_master_password(eid, &ret, master_password, new_master_password);
-    if (ecall_status != SGX_SUCCESS || is_error(ret)) {
-        error_print("Fail change master-password.");
-        return -1;
+    else if(t_flag) {
+        info_print("Running tests...");
+        if (test(eid) != 0) {error_print("One or more tests failed.");}
+        else {info_print("All tests successfully passed.");}
     }
-    info_print("Master-password successfully changed.");
-
-
-    // add a second item
-    ecall_status = ecall_add_item(eid, &ret, new_master_password, &new_item, sizeof(item_t));
-    if (ecall_status != SGX_SUCCESS || is_error(ret)) {
-        error_print("Fail to add new item to wallet.");
-        return -1;
+    else if(n_flag && p_value != NULL) {
+        // TODO
+        warning_print("[TODO] call create wallet.");
     }
-    info_print("Item successfully added to the wallet.");
-
-
-    // remove second item
-    const int index = 1;
-    ecall_status = ecall_remove_item(eid, &ret, new_master_password, index);
-    if (ecall_status != SGX_SUCCESS || is_error(ret)) {
-        error_print("Fail to remove item.");
-        return -1;
+    else if(s_flag && p_value != NULL) {
+        // TODO
+        warning_print("[TODO] call show wallet.");
     }
-    info_print("Item successfully removed from the wallet.");
-
-
-    // show wallet
-    wallet_t* wallet = (wallet_t*)malloc(sizeof(wallet_t));
-    ecall_status = ecall_show_wallet(eid, &ret, new_master_password, wallet, sizeof(wallet_t));
-    if (ecall_status != SGX_SUCCESS || is_error(ret)) {
-        error_print("Fail to retrieve wallet.");
-        return -1;
+    else if (p_value != NULL && c_value != NULL) {
+        // TODO
+        warning_print("[TODO] call change master-password.");
     }
-    info_print("Wallet successfully retrieved.");
-    print_wallet(wallet);
-    free(wallet);
-
+    else if (p_value != NULL && a_value != NULL) {
+        // TODO
+        warning_print("[TODO] call add item.");
+    }
 
 
     ////////////////////////////////////////////////
@@ -259,6 +215,7 @@ int main(int argc, char const *argv[]) {
         error_print("Fail to destroy enclave."); 
         return -1;
     }
+    info_print("Enclave successfully destroyed.");
 
 
     ////////////////////////////////////////////////

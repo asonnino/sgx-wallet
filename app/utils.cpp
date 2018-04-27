@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #include <stdio.h>
 #include <cstring>
 
@@ -123,5 +122,14 @@ int is_error(int ret) {
     // print error message
     error_print(err_message);
     return 1;
+}
+
+
+/**
+ *
+ *
+ */
+void display_help() {
+	warning_print("[TODO] Display help.");
 }
 
