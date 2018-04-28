@@ -1,7 +1,7 @@
 # sgx-wallet
 [![license](https://img.shields.io/badge/license-GPL3-brightgreen.svg)](https://github.com/asonnino/sgx-wallet/blob/master/LICENSE)
 
-This is a simple password-wallet application based on Intel SGX for linux. Intel also provides a full [tutorial](https://software.intel.com/en-us/articles/introducing-the-intel-software-guard-extensions-tutorial-series) and [source code](https://github.com/IntelSoftware/Tutorial-Password-Manager-with-Intel-SGX) for Windows users using Visual Studio.
+This is a simple password-wallet application based on Intel SGX for linux. Intel also provides a full [tutorial](https://software.intel.com/en-us/articles/introducing-the-intel-software-guard-extensions-tutorial-series) and [source code](https://github.com/IntelSoftware/Tutorial-Password-Manager-with-Intel-SGX) for Windows using Visual Studio.
 
 
 ## Pre-requisites
