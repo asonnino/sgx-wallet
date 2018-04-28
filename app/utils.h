@@ -50,7 +50,12 @@ int is_error(int ret);
 /**
  *
  */
-void display_help();
+void show_help();
+
+/**
+ *
+ */
+void show_version();
 
 
 #endif // UTIL_H_

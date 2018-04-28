@@ -23,7 +23,7 @@
 /***************************************************
  * config.
  ***************************************************/
-#define APP_NAME "SGX-WALLET"
+#define APP_NAME "sgx-wallet"
 #define VERSION "0.0.1"
 #define ENCLAVE_FILE "enclave.signed.so"
 #define WALLET_FILE "wallet.seal"

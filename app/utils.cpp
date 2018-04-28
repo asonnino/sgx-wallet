@@ -129,7 +129,54 @@ int is_error(int ret) {
  *
  *
  */
-void display_help() {
-	warning_print("[TODO] Display help.");
+void show_help() {
+	const char* command;
+
+	// short help
+	printf("\n");
+	command = "[-h Show this screen] [-v Show version] [-t Run tests] " \
+		"[-n master-password] [-p master-password -c new-master-password]" \
+		"[-p master-password -a -x items_title -y items_username -z toitems_password]" \
+		"[-p master-password -r items_index]";
+	printf("usage: %s %s\n\n", APP_NAME, command);
+
+	// detailed usage
+	printf("usage:\n");
+
+	command = "-h\tShow this screen";
+	printf("\t%s %s\n", APP_NAME, command);
+
+	command = "-v\tShow version";
+	printf("\t%s %s\n", APP_NAME, command);
+
+	command = "-t\tRun tests";
+	printf("\t%s %s\n", APP_NAME, command);
+
+	command = "-n master-password\tCreate new wallet with password <master-password>";
+	printf("\t%s %s\n", APP_NAME, command);
+
+	command = "-p master-password -c new-master-password\tChange current master-password to <new-master-password>";
+	printf("\t%s %s\n", APP_NAME, command);
+
+	command = "-p master-password -a -x items_title -y items_username -z toitems_password\t" \
+		"Add a new item to the wallet with " \
+		"title <items_title>, username <items_username>, and password <items_password>";
+	printf("\t%s %s\n", APP_NAME, command);
+
+	command = "-p master-password -r items_index\t Remove item at index <items_index> from the wallet";
+	printf("\t%s %s\n", APP_NAME, command);
+
+	printf("\n");
 }
+
+
+/**
+ *
+ *
+ */
+void show_version() {
+	printf("v%s\n", VERSION);
+}
+
+
 
