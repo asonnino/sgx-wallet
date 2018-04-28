@@ -15,17 +15,24 @@ $ source ${sgx-sdk-install-path}/environment
 ```
 where `${sgx-sdk-install-path}` is your SDK installation path. 
   - Clone and build the source code:
-```
-$ git clone https://github.com/asonnino/sgx-wallet.git
-$ cd sgx-wallet
-$ make
-```
+  ```
+  $ git clone https://github.com/asonnino/sgx-wallet.git
+  $ cd sgx-wallet
+  $ make
+  ```
 
 ## Usage
-Basic usage is as follows: 
+The current cli supports the following options:
+  - show help:
 ```
-sgx-wallet [-h Show this screen] [-v Show version] [-t Run tests] [-n master-password] [-p master-password -c new-master-password] [-p master-password -a -x items_title -y items_username -z items_password] [-p master-password -r items_index]
+sgx-wallet -h
 ```
+  - show version:
+```
+sgx-wallet -v
+``` 
+
+
 or specifically:
   - `sgx-wallet -h`: show help;
   - `sgx-wallet -v`: show version;
