@@ -9,7 +9,7 @@ Ensure to have installed the Intel SGX Linux [drivers](https://github.com/intel/
 
 
 ## Install
-*sgx-wallet* can be installed as follows:
+**sgx-wallet** can be installed as follows:
 
   - Source the Intel SGX SDK as described [here](https://github.com/intel/linux-sgx#install-the-intelr-sgx-sdk-1):
 ```
@@ -26,7 +26,7 @@ $ make
 
 
 ## Usage
-*sgx-wallet* comes with a simple cli that can be run with the following options:
+**sgx-wallet** comes with a simple cli that can be run with the following options:
   - Show help:
 ```
 sgx-wallet -h
