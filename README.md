@@ -1,5 +1,6 @@
 # sgx-wallet
 [![license](https://img.shields.io/badge/license-GPL3-brightgreen.svg)](https://github.com/asonnino/sgx-wallet/blob/master/LICENSE)
+
 This is a simple password wallet application based on Intel SGX on linux. 
 
 ## Pre-requisites
