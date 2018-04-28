@@ -26,7 +26,7 @@ $ make
 
 
 ## Usage
-The current cli can be run with the following options:
+*sgx-wallet* comes with a simple cli that can be run with the following options:
   - Show help:
 ```
 sgx-wallet -h
@@ -46,7 +46,6 @@ sgx-wallet -t
 ```
 sgx-wallet -n master-password
 ``` 
-The wallet is saved in a file called `wallet.seal` in the same directory as the main application. Note that you can have only one `wallet.seal` file.
 
   - Change current master-password to `<new-master-password>`:
 ```
@@ -62,7 +61,7 @@ sgx-wallet -p master-password -a -x items_title -y items_username -z toitems_pas
 ```
 sgx-wallet -p master-password -r items_index
 ``` 
-
+The wallet data are saved in a file called `wallet.seal` in the same directory as the main application. Note that you can have only one `wallet.seal` file, and attempting to call twice 'sgx-wallet -n master-password' will result in an error.
 
 ## Contribute
 Any help is welcome through PRs!
