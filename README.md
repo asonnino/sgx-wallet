@@ -46,6 +46,7 @@ sgx-wallet -t
 ```
 sgx-wallet -n master-password
 ``` 
+The wallet is saved in a file called `wallet.seal` in the same directory as the main application. Note that you can have only one `wallet.seal` file.
 
   - Change current master-password to `<new-master-password>`:
 ```
