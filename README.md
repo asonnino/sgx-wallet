@@ -61,7 +61,7 @@ sgx-wallet -p master-password -a -x items_title -y items_username -z toitems_pas
 ```
 sgx-wallet -p master-password -r items_index
 ``` 
-The wallet data are saved in a file called `wallet.seal` in the same directory as the main application. Note that you can have only one `wallet.seal` file, and attempting to call twice 'sgx-wallet -n master-password' will result in an error.
+The wallet data are saved in a file called `wallet.seal` in the same directory as the main application. Note that you can have only one `wallet.seal` file, and attempting to call twice `sgx-wallet -n master-password` will result in an error.
 
 ## Contribute
 Any help is welcome through PRs!
