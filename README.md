@@ -8,11 +8,13 @@ This is a simple password wallet application based on Intel SGX on linux.
 Ensure to have installed the Intel SGX Linux [drivers](https://github.com/intel/linux-sgx-driver) and [SDK](https://github.com/intel/linux-sgx).
 
 ## Install
-First, source the Intel SGX SDK as described [here](https://github.com/intel/linux-sgx#install-the-intelr-sgx-sdk-1):
+*sgx-wallet* can be installed as follows:
+  - Source the Intel SGX SDK as described [here](https://github.com/intel/linux-sgx#install-the-intelr-sgx-sdk-1):
 ```
 $ source ${sgx-sdk-install-path}/environment
 ```
-where `${sgx-sdk-install-path}` is your SDK installation path. Then, clone and build the source code:
+where `${sgx-sdk-install-path}` is your SDK installation path. 
+  - Clone and build the source code:
 ```
 $ git clone https://github.com/asonnino/sgx-wallet.git
 $ cd sgx-wallet
