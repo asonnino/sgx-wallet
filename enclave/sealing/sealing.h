@@ -45,6 +45,7 @@
  */
 sgx_status_t seal_wallet(const wallet_t* plaintext, sgx_sealed_data_t* sealed_data, size_t sealed_size);
 
+
 /**
  * @brief      Unseal the sealed_data given into c-string
  *

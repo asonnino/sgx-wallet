@@ -39,7 +39,7 @@ int ecall_create_wallet(const char* master_password) {
 	//	3. create wallet 
 	//	4. seal wallet
 	//	5. [ocall] save wallet
-	//	6. free enclave memory
+	//	6. exit enclave
 	//
 	//
 	sgx_status_t ocall_status, sealing_status;
@@ -82,8 +82,8 @@ int ecall_create_wallet(const char* master_password) {
 	size_t sealed_size = sizeof(sgx_sealed_data_t) + sizeof(wallet_t);
 	uint8_t* sealed_data = (uint8_t*)malloc(sealed_size);
     sealing_status = seal_wallet(wallet, (sgx_sealed_data_t*)sealed_data, sealed_size);
+    free(wallet);
     if (sealing_status != SGX_SUCCESS) {
-    	free(wallet);
 		free(sealed_data);
 		return ERR_FAIL_SEAL;
     }
@@ -94,9 +94,8 @@ int ecall_create_wallet(const char* master_password) {
 
 	// 5. save wallet
 	ocall_status = ocall_save_wallet(&ocall_ret, sealed_data, sealed_size); 
+	free(sealed_data);
 	if (ocall_ret != 0 || ocall_status != SGX_SUCCESS) {
-		free(wallet);
-		free(sealed_data);
 		return ERR_CANNOT_SAVE_WALLET;
 	}
 	#ifdef ENCLAVE_DEBUG
@@ -104,9 +103,7 @@ int ecall_create_wallet(const char* master_password) {
 	#endif
 
 
-	// 6. free encalve memory
-	free(wallet);
-	free(sealed_data);
+	// 6. exit enclave
 	#ifdef ENCLAVE_DEBUG
 		ocall_debug_print("WALLET SUCCESSFULLY CREATED.");
 	#endif
@@ -126,7 +123,7 @@ int ecall_show_wallet(const char* master_password, wallet_t* wallet, size_t wall
 	// 	2. unseal wallet
 	//	3. verify master-password
 	//	4. return wallet to app
-	//	5. free encalve memory
+	//	5. exit enclave
 	//
 	//
 	sgx_status_t ocall_status, sealing_status;
@@ -154,8 +151,8 @@ int ecall_show_wallet(const char* master_password, wallet_t* wallet, size_t wall
 	uint32_t plaintext_size = sizeof(wallet_t);
     wallet_t* unsealed_wallet = (wallet_t*)malloc(plaintext_size);
     sealing_status = unseal_wallet((sgx_sealed_data_t*)sealed_data, unsealed_wallet, plaintext_size);
+    free(sealed_data);
     if (sealing_status != SGX_SUCCESS) {
-    	free(sealed_data);
 		free(unsealed_wallet);
 		return ERR_FAIL_UNSEAL;
     }
@@ -166,7 +163,6 @@ int ecall_show_wallet(const char* master_password, wallet_t* wallet, size_t wall
     
 	// 3. verify master-password
 	if (strcmp(unsealed_wallet->master_password, master_password) != 0) {
-		free(sealed_data);
 		free(unsealed_wallet);
 		return ERR_WRONG_MASTER_PASSWORD;
 	}
@@ -177,14 +173,13 @@ int ecall_show_wallet(const char* master_password, wallet_t* wallet, size_t wall
 
 	// 4. return wallet to app
 	(* wallet) = *unsealed_wallet;
+	free(unsealed_wallet);
 	#ifdef ENCLAVE_DEBUG
 		ocall_debug_print("[ok] Wallet successfully saved to buffer.");
 	#endif
 
 
-	// 5. free encalve memory
-	free(sealed_data);
-	free(unsealed_wallet);
+	// 5. exit enclave
 	#ifdef ENCLAVE_DEBUG
 		ocall_debug_print("WALLET SUCCESSFULLY RETURNED TO APP.");
 	#endif
@@ -207,7 +202,7 @@ int ecall_change_master_password(const char* old_password, const char* new_passw
 	//	5. update password
 	//	6. seal wallet
 	// 	7. [ocall] save sealed wallet
-	//	8. free encalve memory
+	//	8. exit enclave
 	//
 	//
 	sgx_status_t ocall_status, sealing_status;
@@ -286,9 +281,9 @@ int ecall_change_master_password(const char* old_password, const char* new_passw
 
 
 	// 7. save wallet
-	ocall_status = ocall_save_wallet(&ocall_ret, sealed_data, sealed_size);  
+	ocall_status = ocall_save_wallet(&ocall_ret, sealed_data, sealed_size); 
+	free(sealed_data); 
 	if (ocall_ret != 0 || ocall_status != SGX_SUCCESS) {
-		free(sealed_data);
 		return ERR_CANNOT_SAVE_WALLET;
 	}
 	#ifdef ENCLAVE_DEBUG
@@ -296,8 +291,7 @@ int ecall_change_master_password(const char* old_password, const char* new_passw
 	#endif
 
 
-	// 6. free encalve memory
-	free(sealed_data);
+	// 6. exit enclave
 	#ifdef ENCLAVE_DEBUG
 		ocall_debug_print("MASTER PASSWORD SUCCESSFULLY CHANGED.");
 	#endif
@@ -320,7 +314,7 @@ int ecall_add_item(const char* master_password, const item_t* item, const size_t
 	//	5. add item to the wallet
 	//	6. seal wallet
 	//	7. [ocall] save sealed wallet
-	//	8. free encalve memory
+	//	8. exit enclave
 	//
 	//
 	sgx_status_t ocall_status, sealing_status;
@@ -410,8 +404,8 @@ int ecall_add_item(const char* master_password, const item_t* item, const size_t
 
 	// 7. save wallet
 	ocall_status = ocall_save_wallet(&ocall_ret, sealed_data, sealed_size);  
+	free(sealed_data);
 	if (ocall_ret != 0 || ocall_status != SGX_SUCCESS) {
-		free(sealed_data);
 		return ERR_CANNOT_SAVE_WALLET;
 	}
 	#ifdef ENCLAVE_DEBUG
@@ -419,8 +413,7 @@ int ecall_add_item(const char* master_password, const item_t* item, const size_t
 	#endif
 
 
-	// 8. free encalve memory
-	free(sealed_data);
+	// 8. exit enclave
 	#ifdef ENCLAVE_DEBUG
 		ocall_debug_print("ITEM SUCCESSFULLY ADDED TO THE WALLET.");
 	#endif
@@ -443,7 +436,7 @@ int ecall_remove_item(const char* master_password, const int index) {
 	//	5. remove item from the wallet
 	//	6. seal wallet
 	//	7. [ocall] save sealed wallet
-	//	8. free encalve memory
+	//	8. exit enclave
 	//
 	//
 	sgx_status_t ocall_status, sealing_status;
@@ -530,8 +523,8 @@ int ecall_remove_item(const char* master_password, const int index) {
 
 	// 7. save wallet
 	ocall_status = ocall_save_wallet(&ocall_ret, sealed_data, sealed_size);  
+	free(sealed_data);
 	if (ocall_ret != 0 || ocall_status != SGX_SUCCESS) {
-		free(sealed_data);
 		return ERR_CANNOT_SAVE_WALLET;
 	}
 	#ifdef ENCLAVE_DEBUG
@@ -539,8 +532,7 @@ int ecall_remove_item(const char* master_password, const int index) {
 	#endif
 
 
-	// 8. free encalve memory
-	free(sealed_data);
+	// 8. exit enclave
 	#ifdef ENCLAVE_DEBUG
 		ocall_debug_print("ITEM SUCCESSFULLY REMOVED FROM THE WALLET.");
 	#endif

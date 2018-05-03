@@ -77,25 +77,6 @@ int ocall_is_wallet(void) {
 }
 
 
-/***************************************************
- * OCALLs debug implementation
- ***************************************************/
-int ocall_save_tmp(const wallet_t* data, size_t len) {
-    ofstream file(WALLET_FILE, ios::out | ios::binary);
-    if (file.fail()) {return 1;}
-    file.write((const char*) data, len);
-    file.close();
-    return 0;
-}
-int ocall_load_tmp(wallet_t* data, size_t len) {
-    ifstream file(WALLET_FILE, ios::in | ios::binary);
-    if (file.fail()) {return 1;}
-    file.read((char*) data, len);
-    file.close();
-    return 0;
-}
-
-
 
 /***************************************************
  * main
