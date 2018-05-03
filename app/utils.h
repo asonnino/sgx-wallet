@@ -23,37 +23,72 @@
 
 
 /**
+ * @brief      Prints an info message. 
  *
+ * @param[in]  str    The message to print
+ *
+ * @return     -
  */
 void info_print(const char* str);
 
+
 /**
+ * @brief      Prints a warning message. 
  *
+ * @param[in]  str    The message to print
+ *
+ * @return     -
  */
 void warning_print(const char* str);
 
+
 /**
+ * @brief      Prints an error message. 
  *
+ * @param[in]  str    The message to print
+ *
+ * @return     -
  */
 void error_print(const char* str);
 
+
 /**
+ * @brief      Prints the wallet's content.
  *
+ * @param[in]  wallet    The wallet to print out
+ *
+ * @return     -
  */
 void print_wallet(const wallet_t* wallet);
 
-/**
- *
- */
-int is_error(int ret);
 
 /**
+ * @brief      Prints an error message correspondig to the
+ *			   error code.
  *
+ * @param[in]  ret    The error code
+ *
+ * @return     -
+ */
+int is_error(int error_code);
+
+
+/**
+ * @brief      Prints help & usage. 
+ *
+ * @param      -
+ *
+ * @return     -
  */
 void show_help();
 
+
 /**
+ * @brief      Prints the build version. 
  *
+ * @param      -
+ *
+ * @return     -
  */
 void show_version();
 

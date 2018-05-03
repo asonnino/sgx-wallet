@@ -23,7 +23,11 @@
 
 
 /**
- * 
+ * @brief      Runs the tests.
+ *
+ * @param[in]  eid    The enclave eid
+ *
+ * @return     Truthy if successful, falsy otherwise.
  */
 int test(sgx_enclave_id_t eid);
 

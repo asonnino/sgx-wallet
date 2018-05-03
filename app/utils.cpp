@@ -26,7 +26,7 @@
 
 
 /**
- *
+ * @brief      Prints an info message. 
  *
  */
 void info_print(const char* str) {
@@ -35,7 +35,7 @@ void info_print(const char* str) {
 
 
 /**
- *
+ * @brief      Prints a warning message.
  *
  */
 void warning_print(const char* str) {
@@ -44,7 +44,7 @@ void warning_print(const char* str) {
 
 
 /**
- *
+ * @brief      Prints an error message. 
  *
  */
 void error_print(const char* str) {
@@ -53,7 +53,7 @@ void error_print(const char* str) {
 
 
 /**
- *
+ * @brief      Prints the wallet's content.
  *
  */
 void print_wallet(const wallet_t* wallet) {
@@ -72,14 +72,15 @@ void print_wallet(const wallet_t* wallet) {
 
 
 /**
- *
+ * @brief      Prints an error message correspondig to the
+ *             error code.
  *
  */
-int is_error(int ret) {
+int is_error(int error_code) {
     char err_message[100];
 
     // check error case
-    switch(ret) {
+    switch(error_code) {
         case RET_SUCCESS:
             return 0;
 
@@ -134,56 +135,21 @@ int is_error(int ret) {
 
 
 /**
- *
+ * @brief      Prints help & usage. 
  *
  */
 void show_help() {
-	const char* command;
-
-	// short help
-	printf("\n");
-	command = "[-h Show this screen] [-v Show version] [-t Run tests] " \
+	const char* command = "[-h Show this screen] [-v Show version] [-t Run tests] " \
 		"[-n master-password] [-p master-password -c new-master-password]" \
 		"[-p master-password -a -x items_title -y items_username -z toitems_password]" \
 		"[-p master-password -r items_index]";
-	printf("usage: %s %s\n\n", APP_NAME, command);
-
-	// detailed usage
+	printf("\nusage: %s %s\n\n", APP_NAME, command);
     printf("more information: https://github.com/asonnino/sgx-wallet\n\n");
-    
-    /*
-	printf("usage:\n");
-
-	command = "-h\tShow this screen";
-	printf("\t%s %s\n", APP_NAME, command);
-
-	command = "-v\tShow version";
-	printf("\t%s %s\n", APP_NAME, command);
-
-	command = "-t\tRun tests";
-	printf("\t%s %s\n", APP_NAME, command);
-
-	command = "-n master-password\tCreate new wallet with password <master-password>";
-	printf("\t%s %s\n", APP_NAME, command);
-
-	command = "-p master-password -c new-master-password\tChange current master-password to <new-master-password>";
-	printf("\t%s %s\n", APP_NAME, command);
-
-	command = "-p master-password -a -x items_title -y items_username -z toitems_password\t" \
-		"Add a new item to the wallet with " \
-		"title <items_title>, username <items_username>, and password <items_password>";
-	printf("\t%s %s\n", APP_NAME, command);
-
-	command = "-p master-password -r items_index\t Remove item at index <items_index> from the wallet";
-	printf("\t%s %s\n", APP_NAME, command);
-    
-	printf("\n");
-    */
 }
 
 
 /**
- *
+ * @brief      Prints the build version. 
  *
  */
 void show_version() {

@@ -107,9 +107,9 @@ enclave {
     // define OCALLs
     untrusted {
         /**
-         * @brief      Prints a string to the console. 
+         * @brief      Prints a message to the console. 
          *
-         * @param[in]  str    The string to print
+         * @param[in]  str    The message to print
          *
          * @return     -
          */

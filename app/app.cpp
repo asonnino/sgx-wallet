@@ -38,7 +38,7 @@ using namespace std;
  * OCALLs implementation
  ***************************************************/
 /**
- * @brief      Prints a string to the console. 
+ * @brief      Prints a message to the console. 
  *
  */
 void ocall_debug_print(const char* str) {

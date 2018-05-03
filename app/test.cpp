@@ -25,7 +25,8 @@
 #include "utils.h"
 
 
-/*
+/**
+ * @brief      Runs the tests.
  *
  */
 int test(sgx_enclave_id_t eid) {
@@ -118,3 +119,4 @@ int test(sgx_enclave_id_t eid) {
 
     return 0;
 }
+
