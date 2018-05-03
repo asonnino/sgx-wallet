@@ -51,14 +51,14 @@ sgx-wallet -n master-password
 sgx-wallet -p master-password -c new-master-password
 ``` 
 
-  - Add a new item to the wallet with title `<items_title>`, username `<items_username>`, and password `<items_password>`:
+  - Add a new item to the wallet with title `<item_title>`, username `<item_username>`, and password `<item_password>`:
 ```
-sgx-wallet -p master-password -a -x items_title -y items_username -z items_password
+sgx-wallet -p master-password -a -x item_title -y item_username -z item_password
 ``` 
 
-  - Remove item at index `<items_index>` from the wallet:
+  - Remove item at index `<item_index>` from the wallet:
 ```
-sgx-wallet -p master-password -r items_index
+sgx-wallet -p master-password -r item_index
 ``` 
 The wallet data are saved in a file called `wallet.seal` in the same directory as the main application. Note that you can have only one `wallet.seal` file, and attempting to call twice `sgx-wallet -n master-password` will result in an error.
 
