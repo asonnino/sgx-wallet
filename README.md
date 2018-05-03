@@ -11,9 +11,9 @@ Ensure to have the Intel SGX Linux [drivers](https://github.com/intel/linux-sgx-
 ## Install
 Install **sgx-wallet** as follows:
 
-  - Source the Intel SGX SDK as described [here](https://github.com/intel/linux-sgx#install-the-intelr-sgx-sdk-1); if your SDK installation path is `${sgx-sdk-install-path}`, run:
+  - Source the Intel SGX SDK as described [here](https://github.com/intel/linux-sgx#install-the-intelr-sgx-sdk-1); if your SDK installation path is `/opt/intel/sgxsdk/`, run:
 ```
-$ source ${sgx-sdk-install-path}/environment
+$ source /opt/intel/sgxsdk/environment
 ```
 
   - Clone and build the source code:
