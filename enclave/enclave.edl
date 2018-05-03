@@ -20,7 +20,7 @@
 enclave {
 
 	// import enclave dependencies  
-    from "sealing/sealing.edl" import *;
+    //from "sealing/sealing.edl" import *;
 
     // includes
     include "wallet.h"

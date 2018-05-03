@@ -16,25 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef SEALING_H_
+#define SEALING_H_
 
-#ifndef ENCLAVE_H_
-#define ENCLAVE_H_
+#include "sgx_trts.h"
+#include "sgx_tseal.h"
+
+#include "wallet.h"
+
+/**
+ *
+ */
+sgx_status_t seal(const uint8_t* plaintext, const size_t plaintext_len, sgx_sealed_data_t* sealed_data, size_t sealed_size);
+sgx_status_t seal_wallet(const wallet_t* plaintext, sgx_sealed_data_t* sealed_data, size_t sealed_size);
+
+/**
+ *
+ */
+sgx_status_t unseal(const sgx_sealed_data_t* sealed_data, const size_t sealed_size, uint8_t* plaintext, uint32_t plaintext_len);
+sgx_status_t unseal_wallet(const sgx_sealed_data_t* sealed_data, wallet_t* plaintext, uint32_t plaintext_size);
+
+#endif // SEALING_H_
 
 
-/***************************************************
- * Enclave return codes
- ***************************************************/
-#define RET_SUCCESS 0
-#define ERR_PASSWORD_OUT_OF_RANGE 1
-#define ERR_WALLET_ALREADY_EXISTS 2
-#define ERR_CANNOT_SAVE_WALLET 3
-#define ERR_CANNOT_LOAD_WALLET 4
-#define ERR_WRONG_MASTER_PASSWORD 5
-#define ERR_WALLET_FULL 6
-#define ERR_ITEM_DOES_NOT_EXIST 7
-#define ERR_ITEM_TOO_LONG 8
-#define ERR_FAIL_SEAL 9
-#define ERR_FAIL_UNSEAL 10
-
-
-#endif // ENCLAVE_H_

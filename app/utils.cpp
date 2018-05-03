@@ -115,8 +115,16 @@ int is_error(int ret) {
             sprintf(err_message, "Item too longth (maximum size: %d).", MAX_ITEM_SIZE); 
             break;
 
+        case ERR_FAIL_SEAL:
+            sprintf(err_message, "Fail to seal wallet."); 
+            break;
+
+        case ERR_FAIL_UNSEAL:
+            sprintf(err_message, "Fail to unseal wallet."); 
+            break;
+
         default:
-            error_print("Unknown error."); 
+            sprintf(err_message, "Unknown error."); 
     }
 
     // print error message
@@ -141,6 +149,9 @@ void show_help() {
 	printf("usage: %s %s\n\n", APP_NAME, command);
 
 	// detailed usage
+    printf("more information: https://github.com/asonnino/sgx-wallet\n\n");
+    
+    /*
 	printf("usage:\n");
 
 	command = "-h\tShow this screen";
@@ -165,8 +176,9 @@ void show_help() {
 
 	command = "-p master-password -r items_index\t Remove item at index <items_index> from the wallet";
 	printf("\t%s %s\n", APP_NAME, command);
-
+    
 	printf("\n");
+    */
 }
 
 

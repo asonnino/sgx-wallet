@@ -39,8 +39,11 @@ int test(sgx_enclave_id_t eid) {
     const char title[MAX_ITEM_SIZE] = "New Item Title";
     const char username[MAX_ITEM_SIZE] = "asonnino";
     const char password[MAX_ITEM_SIZE] = "test1234";
+
     
+    warning_print("Only 'happy path' is tested.");
     
+
     ////////////////////////////////////////////////
     // test create wallet
     ////////////////////////////////////////////////
@@ -57,18 +60,19 @@ int test(sgx_enclave_id_t eid) {
     // test add items
     ////////////////////////////////////////////////
     // happy path
-    item_t new_item;
-    strcpy(new_item.title, title); 
-    strcpy(new_item.username, username); 
-    strcpy(new_item.password, password);
+    item_t* new_item = (item_t*)malloc(sizeof(item_t));
+    strcpy(new_item->title, title); 
+    strcpy(new_item->username, username); 
+    strcpy(new_item->password, password);
     for (int i = 0; i < 2; ++i) {
-        ecall_status = ecall_add_item(eid, &ret, master_password, &new_item, sizeof(item_t));
+        ecall_status = ecall_add_item(eid, &ret, master_password, new_item, sizeof(item_t));
         if (ecall_status != SGX_SUCCESS || is_error(ret)) {
             error_print("[TEST] Fail to add new item to wallet.");
             return 1;
         }
         info_print("[TEST] Item successfully added to the wallet.");
     }
+    free(new_item);
     
 
     ////////////////////////////////////////////////
