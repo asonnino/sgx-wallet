@@ -41,7 +41,7 @@ sgx-wallet -v
 sgx-wallet -t
 ``` 
 
-  - create a new wallet with master-password `<master-passowrd>`:
+  - Create a new wallet with master-password `<master-passowrd>`:
 ```
 sgx-wallet -n master-password
 ``` 
