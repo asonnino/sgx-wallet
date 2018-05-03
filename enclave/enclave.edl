@@ -25,27 +25,78 @@ enclave {
 
     // define ECALLs
     trusted {
+        /**
+         * @brief      Creates a new wallet with the provided master-password.
+         *
+         * @param[in]  master_password    The wallet's master-password
+         *
+         * @return     Truthy if successful, error code otherwise.
+         */
         public int ecall_create_wallet(
             [in, string]const char* master_password
         );
 
+
+        /**
+         * @brief      Provides the wallet content. The sizes/length of 
+         *             pointers need to be specified, otherwise SGX will
+         *             assume a count of 1 for all pointers.
+         *
+         * @param[in]  master_password    The wallet's master-password
+         * @param[out] wallet             The wallet's content
+         * @param[in]  wallet_size        The wallet's size
+         *
+         * @return     Truthy if successful, error code otherwise.
+         */
         public int ecall_show_wallet(
             [in, string]const char* master_password, 
             [out, size=wallet_size] wallet_t* wallet,
             size_t wallet_size
         );
 
+
+        /**
+         * @brief      Changes the wallet's master-password.
+         *
+         * @param[in]  old_password    The wallet's old master-password
+         * @param[in]  new_password    The wallet's new master-password
+         *
+         * @return     Truthy if successful, error code otherwise.
+         */
         public int ecall_change_master_password(
             [in, string]const char* old_password, 
             [in, string]const char* new_password
         );
 
+
+        /**
+         * @brief      Adds an item to the wallet. The sizes/length of 
+         *             pointers need to be specified, otherwise SGX will
+         *             assume a count of 1 for all pointers.
+         *
+         * @param[in]  master_password    The wallet's master-password
+         * @param[in]  item               The item's content
+         * @param[in]  item_size          The item's size
+         *
+         * @return     Truthy if successful, error code otherwise.
+         */
         public int ecall_add_item(
             [in, string]const char* master_password, 
             [in, size=item_size]const item_t* item,
             size_t item_size
         );
 
+
+        /**
+         * @brief      Removes an item from the wallet. The sizes/length of 
+         *             pointers need to be specified, otherwise SGX will
+         *             assume a count of 1 for all pointers.
+         *
+         * @param[in]  master_password    The wallet's master-password
+         * @param[in]  index              The index of the item to remove
+         *
+         * @return     Truthy if successful, error code otherwise.
+         */
         public int ecall_remove_item(
             [in, string]const char* master_password, 
             int index
@@ -55,20 +106,56 @@ enclave {
 
     // define OCALLs
     untrusted {
+        /**
+         * @brief      Prints a string to the console. 
+         *
+         * @param[in]  str    The string to print
+         *
+         * @return     -
+         */
         void ocall_debug_print(
             [in, string]const char* str
         );
 
+
+        /**
+         * @brief      Save sealed data to file The sizes/length of 
+         *             pointers need to be specified, otherwise SGX will
+         *             assume a count of 1 for all pointers.
+         *
+         * @param[in]  sealed_data    The data to save 
+         * @param[in]  sealed_size    The size of the supplied data
+         *
+         * @return     Truthy if successful, error code otherwise.
+         */
         int ocall_save_wallet(
             [in, size=sealed_size]const uint8_t* sealed_data, 
             size_t sealed_size
         );
 
+        /**
+         * @brief      Load sealed data from file The sizes/length of 
+         *             pointers need to be specified, otherwise SGX will
+         *             assume a count of 1 for all pointers.
+         *
+         * @param[out] sealed_data    The retrieved data 
+         * @param[in]  sealed_size    The size of the data
+         *
+         * @return     Truthy if successful, error code otherwise.
+         */
         int ocall_load_wallet(
             [out, size=sealed_size]uint8_t* sealed_data, 
             size_t sealed_size
         );
 
+
+        /**
+         * @brief      Verifies if a wallet files exists.
+         *
+         * @param      - 
+         *
+         * @return     Truthy if data exists, falsy otherwise.
+         */
         int ocall_is_wallet(void);
     };
 };

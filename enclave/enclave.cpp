@@ -27,7 +27,7 @@
 #include "sealing/sealing.h"
 
 /**
- *
+ * @brief      Creates a new wallet with the provided master-password.
  *
  */
 int ecall_create_wallet(const char* master_password) {
@@ -112,7 +112,9 @@ int ecall_create_wallet(const char* master_password) {
 
 
 /**
- *
+ * @brief      Provides the wallet content. The sizes/length of 
+ *             pointers need to be specified, otherwise SGX will
+ *             assume a count of 1 for all pointers.
  *
  */
 int ecall_show_wallet(const char* master_password, wallet_t* wallet, size_t wallet_size) {
@@ -188,7 +190,7 @@ int ecall_show_wallet(const char* master_password, wallet_t* wallet, size_t wall
 
 
 /**
- *
+ * @brief      Changes the wallet's master-password.
  *
  */
 int ecall_change_master_password(const char* old_password, const char* new_password) {
@@ -300,7 +302,9 @@ int ecall_change_master_password(const char* old_password, const char* new_passw
 
 
 /**
- *
+ * @brief      Adds an item to the wallet. The sizes/length of 
+ *             pointers need to be specified, otherwise SGX will
+ *             assume a count of 1 for all pointers.
  *
  */
 int ecall_add_item(const char* master_password, const item_t* item, const size_t item_size) {
@@ -422,7 +426,9 @@ int ecall_add_item(const char* master_password, const item_t* item, const size_t
 
 
 /**
- *
+ * @brief      Removes an item from the wallet. The sizes/length of 
+ *             pointers need to be specified, otherwise SGX will
+ *             assume a count of 1 for all pointers.
  *
  */
 int ecall_remove_item(const char* master_password, const int index) {
