@@ -53,7 +53,7 @@ sgx-wallet -p master-password -c new-master-password
 
   - Add a new item to the wallet with title `<items_title>`, username `<items_username>`, and password `<items_password>`:
 ```
-sgx-wallet -p master-password -a -x items_title -y items_username -z toitems_password
+sgx-wallet -p master-password -a -x items_title -y items_username -z items_password
 ``` 
 
   - Remove item at index `<items_index>` from the wallet:
