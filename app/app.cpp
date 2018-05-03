@@ -37,14 +37,18 @@ using namespace std;
 /***************************************************
  * OCALLs implementation
  ***************************************************/
-/*
+/**
+ * @brief      Prints a string to the console. 
  *
  */
 void ocall_debug_print(const char* str) {
     printf("[DEBUG] %s\n", str);
 }
 
-/*
+/**
+ * @brief      Save sealed data to file The sizes/length of 
+ *             pointers need to be specified, otherwise SGX will
+ *             assume a count of 1 for all pointers.
  *
  */
 int ocall_save_wallet(const uint8_t* sealed_data, const size_t sealed_size) {
@@ -55,7 +59,10 @@ int ocall_save_wallet(const uint8_t* sealed_data, const size_t sealed_size) {
     return 0;
 }
 
-/*
+/**
+ * @brief      Load sealed data from file The sizes/length of 
+ *             pointers need to be specified, otherwise SGX will
+ *             assume a count of 1 for all pointers.
  *
  */
 int ocall_load_wallet(uint8_t* sealed_data, const size_t sealed_size) {
@@ -66,7 +73,8 @@ int ocall_load_wallet(uint8_t* sealed_data, const size_t sealed_size) {
     return 0;
 }
 
-/*
+/**
+ * @brief      Verifies if a wallet files exists.
  *
  */
 int ocall_is_wallet(void) {
@@ -81,9 +89,6 @@ int ocall_is_wallet(void) {
 /***************************************************
  * main
  ***************************************************/
-/*
- *
- */
 int main(int argc, char** argv) {
     // declare enclave & return variables
     sgx_enclave_id_t eid = 0;

@@ -133,6 +133,7 @@ enclave {
             size_t sealed_size
         );
 
+
         /**
          * @brief      Load sealed data from file The sizes/length of 
          *             pointers need to be specified, otherwise SGX will

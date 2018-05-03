@@ -22,7 +22,7 @@
 
 
 // uncomment to enable debug print
-#define ENCLAVE_DEBUG
+//#define ENCLAVE_DEBUG
 
 
 #endif // DEBUG_H_
