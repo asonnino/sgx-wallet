@@ -1,18 +1,18 @@
 /*
  * Copyright 2018 Alberto Sonnino
- * 
+ *
  * This file is part of SGX-WALLET.
- * 
+ *
  * SGX-WALLET is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * SGX-WALLET is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with SGX-WALLET.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -33,10 +33,10 @@
 int ecall_create_wallet(const char* master_password) {
 
 	//
-	// OVERVIEW: 
+	// OVERVIEW:
 	//	1. check password policy
 	//	2. [ocall] abort if wallet already exist
-	//	3. create wallet 
+	//	3. create wallet
 	//	4. seal wallet
 	//	5. [ocall] save wallet
 	//	6. exit enclave
@@ -66,7 +66,7 @@ int ecall_create_wallet(const char* master_password) {
 	// 3. create new wallet
 	wallet_t* wallet = (wallet_t*)malloc(sizeof(wallet_t));
 	wallet->size = 0;
-	strncpy(wallet->master_password, master_password, strlen(master_password)+1); 
+	strncpy(wallet->master_password, master_password, strlen(master_password)+1);
 	DEBUG_PRINT("[OK] New wallet successfully created.");
 
 
@@ -80,10 +80,10 @@ int ecall_create_wallet(const char* master_password) {
 		return ERR_FAIL_SEAL;
     }
 	DEBUG_PRINT("[OK] Seal wallet.");
-    
+
 
 	// 5. save wallet
-	ocall_status = ocall_save_wallet(&ocall_ret, sealed_data, sealed_size); 
+	ocall_status = ocall_save_wallet(&ocall_ret, sealed_data, sealed_size);
 	free(sealed_data);
 	if (ocall_ret != 0 || ocall_status != SGX_SUCCESS) {
 		return ERR_CANNOT_SAVE_WALLET;
@@ -98,7 +98,7 @@ int ecall_create_wallet(const char* master_password) {
 
 
 /**
- * @brief      Provides the wallet content. The sizes/length of 
+ * @brief      Provides the wallet content. The sizes/length of
  *             pointers need to be specified, otherwise SGX will
  *             assume a count of 1 for all pointers.
  *
@@ -106,7 +106,7 @@ int ecall_create_wallet(const char* master_password) {
 int ecall_show_wallet(const char* master_password, wallet_t* wallet, size_t wallet_size) {
 
 	//
-	// OVERVIEW: 
+	// OVERVIEW:
 	//	1. [ocall] load wallet
 	// 	2. unseal wallet
 	//	3. verify master-password
@@ -141,8 +141,8 @@ int ecall_show_wallet(const char* master_password, wallet_t* wallet, size_t wall
 		return ERR_FAIL_UNSEAL;
     }
 	DEBUG_PRINT("[OK] Unseal wallet.");
-    
-    
+
+
 	// 3. verify master-password
 	if (strcmp(unsealed_wallet->master_password, master_password) != 0) {
 		free(unsealed_wallet);
@@ -170,7 +170,7 @@ int ecall_show_wallet(const char* master_password, wallet_t* wallet, size_t wall
 int ecall_change_master_password(const char* old_password, const char* new_password) {
 
 	//
-	// OVERVIEW: 
+	// OVERVIEW:
 	//	1. check password policy
 	//	2. [ocall] load wallet
 	// 	3. unseal wallet
@@ -226,7 +226,7 @@ int ecall_change_master_password(const char* old_password, const char* new_passw
 
 
 	// 5. update password
-	strncpy(wallet->master_password, new_password, strlen(new_password)+1); 
+	strncpy(wallet->master_password, new_password, strlen(new_password)+1);
 	DEBUG_PRINT("[ok] Successfully updated master-password.");
 
 
@@ -235,16 +235,15 @@ int ecall_change_master_password(const char* old_password, const char* new_passw
     sealing_status = seal_wallet(wallet, (sgx_sealed_data_t*)sealed_data, sealed_size);
     free(wallet);
     if (sealing_status != SGX_SUCCESS) {
-    	free(wallet);
-		free(sealed_data);
-		return ERR_FAIL_SEAL;
+			free(sealed_data);
+			return ERR_FAIL_SEAL;
     }
 	DEBUG_PRINT("[OK] Seal wallet.");
 
 
 	// 7. save wallet
-	ocall_status = ocall_save_wallet(&ocall_ret, sealed_data, sealed_size); 
-	free(sealed_data); 
+	ocall_status = ocall_save_wallet(&ocall_ret, sealed_data, sealed_size);
+	free(sealed_data);
 	if (ocall_ret != 0 || ocall_status != SGX_SUCCESS) {
 		return ERR_CANNOT_SAVE_WALLET;
 	}
@@ -258,7 +257,7 @@ int ecall_change_master_password(const char* old_password, const char* new_passw
 
 
 /**
- * @brief      Adds an item to the wallet. The sizes/length of 
+ * @brief      Adds an item to the wallet. The sizes/length of
  *             pointers need to be specified, otherwise SGX will
  *             assume a count of 1 for all pointers.
  *
@@ -266,7 +265,7 @@ int ecall_change_master_password(const char* old_password, const char* new_passw
 int ecall_add_item(const char* master_password, const item_t* item, const size_t item_size) {
 
 	//
-	// OVERVIEW: 
+	// OVERVIEW:
 	//	1. [ocall] load wallet
 	//	2. unseal wallet
 	//	3. verify master-password
@@ -320,7 +319,7 @@ int ecall_add_item(const char* master_password, const item_t* item, const size_t
 		strlen(item->password)+1 > MAX_ITEM_SIZE
 	) {
 		free(wallet);
-		return ERR_ITEM_TOO_LONG; 
+		return ERR_ITEM_TOO_LONG;
     }
 	DEBUG_PRINT("[ok] Item successfully verified.");
 
@@ -349,7 +348,7 @@ int ecall_add_item(const char* master_password, const item_t* item, const size_t
 
 
 	// 7. save wallet
-	ocall_status = ocall_save_wallet(&ocall_ret, sealed_data, sealed_size);  
+	ocall_status = ocall_save_wallet(&ocall_ret, sealed_data, sealed_size);
 	free(sealed_data);
 	if (ocall_ret != 0 || ocall_status != SGX_SUCCESS) {
 		return ERR_CANNOT_SAVE_WALLET;
@@ -364,7 +363,7 @@ int ecall_add_item(const char* master_password, const item_t* item, const size_t
 
 
 /**
- * @brief      Removes an item from the wallet. The sizes/length of 
+ * @brief      Removes an item from the wallet. The sizes/length of
  *             pointers need to be specified, otherwise SGX will
  *             assume a count of 1 for all pointers.
  *
@@ -372,7 +371,7 @@ int ecall_add_item(const char* master_password, const item_t* item, const size_t
 int ecall_remove_item(const char* master_password, const int index) {
 
 	//
-	// OVERVIEW: 
+	// OVERVIEW:
 	//	1. check index bounds
 	//	2. [ocall] load wallet
 	//	3. unseal wallet
@@ -452,7 +451,7 @@ int ecall_remove_item(const char* master_password, const int index) {
 
 
 	// 7. save wallet
-	ocall_status = ocall_save_wallet(&ocall_ret, sealed_data, sealed_size);  
+	ocall_status = ocall_save_wallet(&ocall_ret, sealed_data, sealed_size);
 	free(sealed_data);
 	if (ocall_ret != 0 || ocall_status != SGX_SUCCESS) {
 		return ERR_CANNOT_SAVE_WALLET;
@@ -464,4 +463,3 @@ int ecall_remove_item(const char* master_password, const int index) {
 	DEBUG_PRINT("ITEM SUCCESSFULLY REMOVED FROM THE WALLET.");
 	return RET_SUCCESS;
 }
-
